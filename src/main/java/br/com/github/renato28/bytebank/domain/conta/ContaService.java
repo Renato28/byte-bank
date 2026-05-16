@@ -5,6 +5,7 @@ import br.com.github.renato28.bytebank.domain.cliente.Cliente;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class ContaService {
@@ -63,7 +64,7 @@ public class ContaService {
     private Conta buscarContaPorNumero(Integer numero) {
         return contas
                 .stream()
-                .filter(c -> c.getNumero() == numero)
+                .filter(c -> Objects.equals(c.getNumero(), numero))
                 .findFirst()
                 .orElseThrow(() -> new RegraDeNegocioException("Não existe conta cadastrada com esse número!"));
     }
