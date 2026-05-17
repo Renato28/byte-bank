@@ -29,18 +29,20 @@ public class ByteBankApplication {
                         listarContas();
                         break;
                     case 2:
+                        listarContasPorNumero(teclado.nextInt());
+                    case 3:
                         abrirConta();
                         break;
-                    case 3:
+                    case 4:
                         encerrarConta();
                         break;
-                    case 4:
+                    case 5:
                         consultarSaldo();
                         break;
-                    case 5:
+                    case 6:
                         realizarSaque();
                         break;
-                    case 6:
+                    case 7:
                         realizarDeposito();
                         break;
                 }
@@ -60,12 +62,13 @@ public class ByteBankApplication {
         System.out.println("""
                 BYTEBANK - ESCOLHA UMA OPÇÃO:
                 1 - Lista contas abertas
-                2 - Abertura de conta
-                3 - Encerramento de conta
-                4 - Consultar saldo de uma conta
-                5 - Realizar saque em uma conta
-                6 - Realizar depósito em uma conta
-                7 - Sair
+                2 - Lista conta por número
+                3 - Abertura de conta
+                4 - Encerramento de conta
+                5 - Consultar saldo de uma conta
+                6 - Realizar saque em uma conta
+                7 - Realizar depósito em uma conta
+                8 - Sair
                 """);
         return teclado.nextInt();
     }
@@ -74,6 +77,15 @@ public class ByteBankApplication {
         System.out.println("Contas cadastradas:");
         var contas = service.listarContasAbertas();
         contas.forEach(System.out::println);
+
+        System.out.println("Pressione qualquer tecla e dê ENTER para voltar ao menu principal");
+        teclado.next();
+    }
+
+    private static void listarContasPorNumero(Integer numeroDaConta) {
+        System.out.println("Contas cadastradas:");
+        var conta = service.buscarContaPorNumero(numeroDaConta);
+        System.out.println("Conta encontrada: " + conta);
 
         System.out.println("Pressione qualquer tecla e dê ENTER para voltar ao menu principal");
         teclado.next();
