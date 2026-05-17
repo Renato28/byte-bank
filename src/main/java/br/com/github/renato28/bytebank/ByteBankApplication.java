@@ -119,7 +119,7 @@ public class ByteBankApplication {
         System.out.println("Digite o número da conta:");
         var numeroConta = teclado.nextInt();
 
-        service.encerrar(numeroConta);
+        service.encerrarLogico(numeroConta);
 
         System.out.println("Conta encerrada com sucesso!");
         System.out.println("Pressione qualquer tecla e dê ENTER para voltar ao menu principal");
