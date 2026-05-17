@@ -2,14 +2,10 @@ package br.com.github.renato28.bytebank.domain.conta;
 
 import br.com.github.renato28.bytebank.ConnectionFactory;
 import br.com.github.renato28.bytebank.domain.RegraDeNegocioException;
-import br.com.github.renato28.bytebank.domain.cliente.Cliente;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public class ContaService {
@@ -68,11 +64,13 @@ public class ContaService {
         contas.remove(conta);
     }
 
-    private Conta buscarContaPorNumero(Integer numero) {
-        return contas
-                .stream()
-                .filter(c -> Objects.equals(c.getNumero(), numero))
-                .findFirst()
-                .orElseThrow(() -> new RegraDeNegocioException("Não existe conta cadastrada com esse número!"));
+    public Conta buscarContaPorNumero(Integer numero) {
+        Connection conn = connection.recuperarConexao();
+        Conta conta = new ContaDAO(conn).listarContaPorNumero(numero);
+        if (conta != null) {
+            return conta;
+        } else {
+            throw new RegraDeNegocioException("Não existe conta cadastrada com esse número!");
+        }
     }
 }
