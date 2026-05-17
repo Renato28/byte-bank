@@ -1,14 +1,24 @@
 package br.com.github.renato28.bytebank.domain.conta;
 
+import br.com.github.renato28.bytebank.ConnectionFactory;
 import br.com.github.renato28.bytebank.domain.RegraDeNegocioException;
 import br.com.github.renato28.bytebank.domain.cliente.Cliente;
 
 import java.math.BigDecimal;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class ContaService {
+
+    private ConnectionFactory connection;
+
+    public ContaService() {
+        this.connection = new ConnectionFactory();
+    }
 
     private Set<Conta> contas = new HashSet<>();
 
@@ -27,7 +37,26 @@ public class ContaService {
         if (contas.contains(conta)) {
             throw new RegraDeNegocioException("Já existe outra conta com o mesmo número");
         }
-        contas.add(conta);
+
+        Connection conn = connection.recuperarConexao();
+
+        String sql = "INSERT INTO conta (numero, saldo, cliente_nome, cliente_cpf, cliente_email) " +
+                "VALUES (?, ?, ?, ?, ?)";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+
+            preparedStatement.setInt(1, dadosDaConta.numero());
+            preparedStatement.setBigDecimal(2, BigDecimal.ZERO);
+            preparedStatement.setString(3, dadosDaConta.dadosCliente().nome());
+            preparedStatement.setString(4, dadosDaConta.dadosCliente().cpf());
+            preparedStatement.setString(5, dadosDaConta.dadosCliente().email());
+
+            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void realizarSaque(Integer numeroDaConta, BigDecimal valor) {
